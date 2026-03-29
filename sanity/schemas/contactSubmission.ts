@@ -2,12 +2,12 @@ import { defineField, defineType } from "sanity";
 
 export default defineType({
   name: "contactSubmission",
-  title: "Inbox: Messages",
+  title: "Meddelanden",
   type: "document",
   fields: [
     defineField({
       name: "name",
-      title: "Sender Name",
+      title: "Namn",
       type: "string",
       readOnly: true, // Prevents accidental editing in the Studio
     }),

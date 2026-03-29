@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   NavigationMenu,
   NavigationMenuContent,
@@ -16,31 +19,41 @@ interface MenuProps {
 }
 
 export default function Menu({ menuItems, categories }: MenuProps) {
+  const router = useRouter();
+
   return (
-    <NavigationMenu className="hidden md:flex">
+    <NavigationMenu
+      className="hidden md:flex"
+      viewportClassName="bg-black/20 backdrop-blur-md text-white top-4"
+    >
       <NavigationMenuList>
         {menuItems.map((item) => (
           <NavigationMenuItem key={item._id}>
             {item.isDropdown ? (
               // --- SCENARIO A: IT IS A DROPDOWN (e.g. "Galleri") ---
               <>
-                <NavigationMenuTrigger className="bg-transparent text-white hover:bg-white/20 hover:text-white dark:text-white">
-                  <Link href={item.link || "#"} legacyBehavior passHref>
-                    {item.title}
-                  </Link>
+                <NavigationMenuTrigger
+                  onClick={() => {
+                    if (item.link) router.push(item.link);
+                  }}
+                  className="cursor-pointer transition-all hover:!bg-transparent focus:!bg-transparent data-open:hover:!bg-transparent data-open:focus:!bg-transparent data-popup-open:!bg-transparent data-popup-open:hover:!bg-transparent"
+                >
+                  {item.title}
                 </NavigationMenuTrigger>
 
-                <NavigationMenuContent>
-                  <ul className="grid w-[300px] gap-3 p-4 md:w-[400px]">
+                <NavigationMenuContent className="">
+                  <ul className="grid w-[300px] gap-3 p-4">
                     {/* Look here! We are looping through the Categories! */}
                     {categories.map((category) => (
                       <li key={category._id}>
                         <NavigationMenuLink asChild>
                           <Link
                             href={`/galleri/${category.slug}`}
-                            className="hover:bg-accent hover:text-accent-foreground block space-y-1 rounded-md p-3 leading-none no-underline transition-colors outline-none select-none"
+                            className="hover:bg-accent hover:text-accent-foreground block w-fit space-y-1 rounded-md p-3 leading-none no-underline transition-colors outline-none select-none"
                           >
-                            <div className="text-sm leading-none font-medium">{category.title}</div>
+                            <div className="text-sm leading-none font-medium">
+                              {category.title}
+                            </div>
                           </Link>
                         </NavigationMenuLink>
                       </li>
@@ -50,13 +63,12 @@ export default function Menu({ menuItems, categories }: MenuProps) {
               </>
             ) : (
               // --- SCENARIO B: IT IS A NORMAL LINK (e.g. "Om Mig") ---
-              <Link href={item.link || "#"} legacyBehavior passHref>
-                <NavigationMenuLink
-                  className={`${navigationMenuTriggerStyle()} bg-transparent text-white hover:bg-white/20 hover:text-white dark:text-white`}
-                >
-                  {item.title}
-                </NavigationMenuLink>
-              </Link>
+              <NavigationMenuLink
+                asChild
+                className={`hover:!bg-transparent ${navigationMenuTriggerStyle()} `}
+              >
+                <Link href={item.link || "#"}>{item.title}</Link>
+              </NavigationMenuLink>
             )}
           </NavigationMenuItem>
         ))}

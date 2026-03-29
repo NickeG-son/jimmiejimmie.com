@@ -6,12 +6,13 @@ import { User } from "lucide-react";
 import menuItems from "./schemas/menuItems";
 import page from "./schemas/page";
 import contactSubmission from "./schemas/contactSubmission";
+import heroSlide from "./schemas/heroSlide";
 
 function InloggLogo() {
   return (
     <div style={{ display: "flex", alignItems: "center", gap: "8px", fontWeight: "bold" }}>
       <User size={24} />
-      Svensson 4x4
+      JimmieJimmie.com
     </div>
   );
 }
@@ -20,8 +21,8 @@ export default defineConfig({
   basePath: "/studio", // <-- The URL path where your friend will go to log in!
   projectId: "gr97dtx7", //  <-- Replace this!
   dataset: "production",
-  name: "Svensson4x4",
-  title: "Svensson4x4",
+  name: "jimmiejimmie",
+  title: "JimmieJimmie.com",
   // We will plug our 'schemas' in here on the next step:
   studio: {
     components: {
@@ -29,7 +30,7 @@ export default defineConfig({
     },
   },
   schema: {
-    types: [category, galleryImage, menuItems, page, contactSubmission],
+    types: [category, galleryImage, menuItems, page, contactSubmission, heroSlide],
   },
   plugins: [structureTool()],
 });

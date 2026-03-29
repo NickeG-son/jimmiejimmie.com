@@ -123,8 +123,35 @@
   }
   body {
     @apply bg-background text-foreground;
+
+    
   }
   html {
     @apply font-mono;
+  }
+
+  ::view-transition-old(root),
+  ::view-transition-new(root) {
+    animation-duration: 0.5s; /* Gör sidövergången lite mjukare */
+  }
+  /* Gör att bilderna inte blinkar vitt/svart under övergången */
+  ::view-transition-old(photo-*) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
+  ::view-transition-new(photo-*) {
+    animation: none;
+    mix-blend-mode: normal;
+  }
+
+  /* Behåll proportionerna under själva animationen */
+  ::view-transition-group(photo-*) {
+    overflow: hidden;
+  }
+
+  /* Detta hjälper bilder att inte "snappa" i storlek */
+  [style*="view-transition-name"] {
+    contain: layout;
   }
 }

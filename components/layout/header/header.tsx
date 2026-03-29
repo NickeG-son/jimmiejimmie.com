@@ -7,6 +7,7 @@ import { ThemeToggle } from "../../theme-toggle";
 import Menu from "./menu";
 import { MenuItem, Category } from "@/lib/types";
 import Link from "next/link";
+import { navigationMenuTriggerStyle } from "@/components/ui/navigation-menu";
 
 interface HeaderProps {
   menuItems: MenuItem[];
@@ -28,26 +29,31 @@ export default function Header({ menuItems, categories }: HeaderProps) {
 
   return (
     <header
-      className={`fixed right-0 left-0 z-50 transition-all duration-500 ${
-        isScrolled ? "top-4 mx-4 rounded-full bg-white/10 shadow-lg backdrop-blur-md md:mx-8" : "top-0 bg-transparent"
-      }`}
+      className={`fixed top-4 right-0 left-0 z-50 mx-4 rounded-full bg-black/20 shadow-lg backdrop-blur-md transition-all duration-500 md:mx-8`}
     >
       <div
-        className={`flex items-center justify-between px-8 transition-all duration-500 ${isScrolled ? "py-3" : "py-6"}`}
+        className={`flex items-center justify-between px-3 py-3 transition-all duration-500`}
       >
         {/* Logo */}
-        <Link href="/" className="text-lg tracking-widest text-white">
-          Svensson 4x4
+        <Link
+          href="/"
+          className="bg-muted flex size-12 flex-shrink-0 items-center justify-center rounded-full p-1 text-xl font-bold tracking-widest"
+        >
+          JJ
         </Link>
 
         {/* Navigation Links - Center */}
         <Menu menuItems={menuItems} categories={categories} />
 
         <div className="flex items-center gap-4">
-          <Button variant="outline" asChild>
-            <Link href="/kontakt">Kontakt</Link>
-          </Button>
-          <ThemeToggle />
+          <Link
+            className={`hover:!bg-transparent ${navigationMenuTriggerStyle()} `}
+            href="/kontakt"
+          >
+            Kontakt
+          </Link>
+
+          {/*     <ThemeToggle /> */}
         </div>
       </div>
     </header>

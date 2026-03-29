@@ -17,8 +17,9 @@ export function ThemeToggle() {
     <Button
       onClick={() => setTheme(theme === "dark" ? "light" : "dark")}
       aria-label="Toggle Dark Mode"
-      variant="outline"
+      variant="link"
       size="icon"
+      className=""
     >
       {theme === "dark" ? <Moon size={20} /> : <Sun size={20} />}
     </Button>

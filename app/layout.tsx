@@ -16,7 +16,7 @@ const geistMono = Geist_Mono({
 });
 
 export const metadata: Metadata = {
-  title: "Svensson 4x4",
+  title: "Jimmie Jimmie",
   description: "Foto galleri",
 };
 
@@ -48,9 +48,11 @@ export default async function RootLayout({
       suppressHydrationWarning
     >
       <body className="bg-background flex min-h-full flex-col">
-        <ThemeProvider attribute="class" defaultTheme="system" enableSystem>
+        <ThemeProvider attribute="class" defaultTheme="dark" enableSystem>
           <Header menuItems={menuItems} categories={categories} />
-          <main className="flex w-full flex-1 flex-col items-center justify-between pt-8">{children}</main>
+          <main className="flex w-full flex-1 flex-col items-center justify-between">
+            {children}
+          </main>
         </ThemeProvider>
       </body>
     </html>
