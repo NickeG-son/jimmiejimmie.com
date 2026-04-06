@@ -14,8 +14,8 @@ export default async function GalleriRootPage() {
   `);
 
   return (
-    <div className="w-full py-18 lg:py-24">
-      <h1 className="mb-6 text-center text-4xl font-bold tracking-widest uppercase md:text-5xl">
+    <div className="w-full py-24">
+      <h1 className="mb-4 text-center text-2xl font-bold tracking-widest uppercase lg:text-5xl">
         Portfolios
       </h1>
 

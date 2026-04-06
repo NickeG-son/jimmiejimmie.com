@@ -64,7 +64,7 @@ export default function GalleryCarousel({
               data-active-slide={index + 1 === current}
               key={item._id}
               className={cn(
-                "flex min-h-[calc(100dvh-280px)] basis-full lg:basis-2/4",
+                "flex min-h-[calc(100dvh-300px)] basis-full lg:min-h-[calc(100dvh-280px)] lg:basis-2/4",
               )}
             >
               <Link

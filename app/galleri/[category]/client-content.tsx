@@ -42,15 +42,15 @@ export default function ClientContent({
     <div
       className={cn(
         "relative min-h-[100dvh] w-full overflow-hidden",
-        detaildId ? "" : "h-full w-full px-8 py-18 lg:py-24",
+        detaildId ? "" : "h-full w-full px-8 py-24",
       )}
     >
       {!detaildId ? (
         <>
-          <h1 className="mb-8 text-center text-4xl font-bold tracking-widest uppercase">
+          <h1 className="mb-4 text-center text-2xl font-bold tracking-widest uppercase lg:text-5xl">
             {category}
           </h1>
-          <div className="sticky top-12 left-8 z-10 w-fit rounded-full bg-black/20 px-4 py-3 backdrop-blur-md lg:absolute lg:top-28 lg:left-8">
+          <div className="sticky top-12 left-0 z-10 w-fit rounded-full bg-black/20 px-4 py-3 backdrop-blur-md lg:absolute lg:top-28 lg:left-8">
             <Link href="/galleri">
               <Button
                 variant="link"
@@ -68,7 +68,7 @@ export default function ClientContent({
         </>
       ) : (
         <>
-          <div className="absolute top-28 left-8 z-10 w-fit rounded-full bg-black/20 px-4 py-3 backdrop-blur-md">
+          <div className="absolute top-28 left-4 z-10 w-fit rounded-full bg-black/20 px-4 py-3 backdrop-blur-md lg:left-8">
             <Button
               variant="link"
               onClick={() => setDetaildId(null)}
@@ -85,7 +85,7 @@ export default function ClientContent({
                   animate={{ opacity: 1, x: 0 }}
                   exit={{ opacity: 0, x: "100%" }}
                   transition={{ delay: 0.2 }}
-                  className="absolute top-28 right-8 bottom-8 z-10 flex flex-col rounded-3xl bg-black/20 p-8 backdrop-blur-md"
+                  className="absolute top-48 right-8 bottom-32 z-10 flex flex-col rounded-3xl bg-black/20 p-8 backdrop-blur-md lg:top-28 lg:bottom-8"
                 >
                   <h1 className="mt-8 text-4xl font-bold tracking-widest uppercase md:text-6xl">
                     {detaildPhoto?.title || detaildPhoto?.slug}

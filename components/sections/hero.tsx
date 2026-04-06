@@ -33,7 +33,7 @@ export default function HeroSection({ slides }: { slides: HeroSlide[] }) {
       style={{ height: `${slides.length * 45}svh` }}
       className="relative w-full"
     >
-      <div className="sticky top-0 h-svh w-full overflow-hidden">
+      <div className="sticky top-0 h-dvh w-full overflow-hidden">
         {/* All images stacked — cross-fade by animating opacity only */}
         {slides.map((s, i) => (
           <motion.div
@@ -62,7 +62,7 @@ export default function HeroSection({ slides }: { slides: HeroSlide[] }) {
           <AnimatePresence mode="wait">
             <motion.div
               key={activeIndex}
-              className="pointer-events-auto absolute right-0 bottom-0 left-0 p-10 md:p-20"
+              className="pointer-events-auto absolute right-0 bottom-16 left-0 p-10 md:p-20 lg:bottom-0"
               initial={{ opacity: 0, y: 28 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -10 }}
