@@ -1,9 +1,11 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { useSearchParams } from "next/navigation";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { z } from "zod";
+import { AnimatePresence, motion } from "motion/react";
 
 import { submitContactForm } from "@/app/actions/contact";
 import { contactSchema } from "@/lib/schemas";
@@ -11,26 +13,46 @@ import { contactSchema } from "@/lib/schemas";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-
-// The brand new Shadcn Field primitives!
 import { Field, FieldLabel, FieldError } from "@/components/ui/field";
+import {
+  Tooltip,
+  TooltipContent,
+  TooltipProvider,
+  TooltipTrigger,
+} from "./ui/tooltip";
+import { Info } from "lucide-react";
 
 export default function ContactForm() {
+  const searchParams = useSearchParams();
+  const urlRef = searchParams.get("ref") ?? "";
+
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{
     error?: string;
     success?: boolean;
   } | null>(null);
 
+  // If there's a ref in the URL we always show the field.
+  // Otherwise the user must check the box to reveal it.
+  const [askingAboutPhoto, setAskingAboutPhoto] = useState(!!urlRef);
+
   const form = useForm<z.infer<typeof contactSchema>>({
-    // Move the 'as any' inside the parentheses!
     resolver: zodResolver(contactSchema as any),
     defaultValues: {
       name: "",
       email: "",
       message: "",
+      imageReferenceId: urlRef,
     },
   });
+
+  // Keep the field in sync if the URL param changes after mount
+  useEffect(() => {
+    if (urlRef) {
+      form.setValue("imageReferenceId", urlRef);
+      setAskingAboutPhoto(true);
+    }
+  }, [urlRef, form]);
 
   async function onSubmit(values: z.infer<typeof contactSchema>) {
     setLoading(true);
@@ -40,6 +62,9 @@ export default function ContactForm() {
     formData.append("name", values.name);
     formData.append("email", values.email);
     formData.append("message", values.message);
+    if (values.imageReferenceId) {
+      formData.append("imageReferenceId", values.imageReferenceId);
+    }
 
     const result = await submitContactForm(formData);
 
@@ -48,6 +73,7 @@ export default function ContactForm() {
 
     if (result.success) {
       form.reset();
+      setAskingAboutPhoto(!!urlRef);
     }
   }
 
@@ -69,7 +95,7 @@ export default function ContactForm() {
       )}
 
       <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-        {/* NAME CONTROLLER */}
+        {/* NAME */}
         <Controller
           name="name"
           control={form.control}
@@ -80,7 +106,7 @@ export default function ContactForm() {
                 {...field}
                 id={field.name}
                 aria-invalid={fieldState.invalid}
-                placeholder="Jimmie"
+                placeholder="Ditt namn"
                 disabled={loading}
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
@@ -88,7 +114,7 @@ export default function ContactForm() {
           )}
         />
 
-        {/* EMAIL CONTROLLER */}
+        {/* EMAIL */}
         <Controller
           name="email"
           control={form.control}
@@ -100,7 +126,7 @@ export default function ContactForm() {
                 id={field.name}
                 type="email"
                 aria-invalid={fieldState.invalid}
-                placeholder="foto@jimmiejimmie.com"
+                placeholder="Din e-postadress"
                 disabled={loading}
               />
               {fieldState.invalid && <FieldError errors={[fieldState.error]} />}
@@ -108,13 +134,86 @@ export default function ContactForm() {
           )}
         />
 
-        {/* MESSAGE CONTROLLER */}
+        {/* PHOTO REFERENCE — hidden behind checkbox unless URL ?ref= set */}
+        {!urlRef && (
+          <label className="flex cursor-pointer items-center gap-3 text-sm font-medium select-none">
+            <input
+              type="checkbox"
+              className="size-4 cursor-pointer accent-current"
+              checked={askingAboutPhoto}
+              onChange={(e) => {
+                setAskingAboutPhoto(e.target.checked);
+                if (!e.target.checked) {
+                  form.setValue("imageReferenceId", "");
+                }
+              }}
+            />
+            Frågor om specifikt foto?
+          </label>
+        )}
+
+        <AnimatePresence initial={false}>
+          {askingAboutPhoto && (
+            <motion.div
+              key="ref-field"
+              initial={{ opacity: 0, height: 0 }}
+              animate={{ opacity: 1, height: "auto" }}
+              exit={{ opacity: 0, height: 0 }}
+              transition={{ duration: 0.25, ease: "easeInOut" }}
+              style={{ overflow: "hidden" }}
+            >
+              <Controller
+                name="imageReferenceId"
+                control={form.control}
+                render={({ field, fieldState }) => (
+                  <Field data-invalid={fieldState.invalid}>
+                    <FieldLabel htmlFor={field.name}>
+                      Bildens referens-ID{" "}
+                      <span className="text-muted-foreground font-normal">
+                        (valfritt)
+                      </span>
+                      <TooltipProvider>
+                        <Tooltip>
+                          <TooltipTrigger>
+                            <Info size={16} />
+                          </TooltipTrigger>
+                          <TooltipContent
+                            side="right"
+                            className="bg-muted max-w-xs rounded-full text-white"
+                          >
+                            <p>
+                              Här kan du skriva in bildens referens-ID som du
+                              hittar i galleriet om du klickar för att förstora
+                              bilden.
+                            </p>
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </FieldLabel>
+                    <Input
+                      {...field}
+                      id={field.name}
+                      type="text"
+                      aria-invalid={fieldState.invalid}
+                      placeholder="t.ex. REF-001"
+                      disabled={loading}
+                    />
+                    {fieldState.invalid && (
+                      <FieldError errors={[fieldState.error]} />
+                    )}
+                  </Field>
+                )}
+              />
+            </motion.div>
+          )}
+        </AnimatePresence>
+        {/* MESSAGE */}
         <Controller
           name="message"
           control={form.control}
           render={({ field, fieldState }) => (
             <Field data-invalid={fieldState.invalid}>
-              <FieldLabel htmlFor={field.name}>Din idé</FieldLabel>
+              <FieldLabel htmlFor={field.name}>Skriv ett meddelande</FieldLabel>
               <Textarea
                 {...field}
                 id={field.name}
@@ -127,7 +226,6 @@ export default function ContactForm() {
             </Field>
           )}
         />
-
         <Button
           type="submit"
           className="mt-8 w-full font-bold tracking-widest uppercase"

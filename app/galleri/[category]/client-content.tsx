@@ -15,6 +15,8 @@ import {
   Smartphone,
   InfoIcon,
   EyeOff,
+  Copy,
+  Check,
 } from "lucide-react";
 import Link from "next/link";
 import CategoryGrid from "@/components/category-grid";
@@ -39,6 +41,7 @@ export default function ClientContent({
   const [showRotateIndicator, setShowRotateIndicator] = useState(false);
   const isMobile = useIsMobile();
   const sessionAllows = useSessionIndicator("hint-rotate-phone");
+  const [copied, setCopied] = useState(false);
 
   useEffect(() => {
     if (!detaildId) {
@@ -74,7 +77,7 @@ export default function ClientContent({
   return (
     <div
       className={cn(
-        "relative min-h-[100dvh] w-full overflow-hidden",
+        "relative min-h-[100dvh] w-full overflow-hidden lg:h-dvh",
         detaildId ? "" : "h-full w-full",
       )}
     >
@@ -194,29 +197,73 @@ export default function ClientContent({
                 className="pointer-events-none absolute inset-0 z-10 flex flex-col p-4 lg:p-8"
               >
                 {/* Top Bar: Close Button */}
-                <div className="flex w-full flex-col justify-start gap-2 lg:absolute lg:top-23 lg:left-8 lg:flex-row">
-                  <Button
-                    variant="ghost"
-                    onClick={() => setDetaildId(null)}
-                    className="pointer-events-auto size-13 cursor-pointer rounded-full bg-black/30 p-0 text-sm tracking-widest text-white uppercase backdrop-blur-md hover:bg-black/60 hover:text-white lg:w-fit lg:px-6 lg:py-6"
-                  >
-                    <ArrowLeftIcon className="size-5" />
-                    <span className="hidden lg:flex">Tillbaka</span>
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    onClick={() => setHideUi(!hideUi)}
-                    className="pointer-events-auto size-13 cursor-pointer rounded-full bg-black/30 p-0 text-sm tracking-widest text-white uppercase backdrop-blur-md hover:bg-black/60 hover:text-white"
-                  >
-                    {hideUi ? (
-                      <InfoIcon className="size-5" />
-                    ) : (
-                      <EyeOff className="size-5" />
-                    )}
-                  </Button>
+                <div className="flex w-full flex-col justify-start gap-2 lg:absolute lg:top-23 lg:left-8">
+                  <div className="flex flex-col gap-2 lg:flex-row">
+                    <Button
+                      variant="ghost"
+                      onClick={() => setDetaildId(null)}
+                      className="pointer-events-auto size-13 cursor-pointer rounded-full bg-black/30 p-0 text-sm tracking-widest text-white uppercase backdrop-blur-md hover:bg-black/60 hover:text-white lg:w-fit lg:px-6 lg:py-6"
+                    >
+                      <ArrowLeftIcon className="size-5" />
+                      <span className="hidden lg:flex">Tillbaka</span>
+                    </Button>
+                    <Button
+                      variant="ghost"
+                      onClick={() => setHideUi(!hideUi)}
+                      className="pointer-events-auto size-13 cursor-pointer rounded-full bg-black/30 p-0 text-sm tracking-widest text-white uppercase backdrop-blur-md hover:bg-black/60 hover:text-white"
+                    >
+                      {hideUi ? (
+                        <InfoIcon className="size-5" />
+                      ) : (
+                        <EyeOff className="size-5" />
+                      )}
+                    </Button>
+                  </div>
+                  {detaildPhoto.referenceId && (
+                    <Button
+                      variant="ghost"
+                      onClick={() => {
+                        navigator.clipboard.writeText(detaildPhoto.referenceId);
+                        setCopied(true);
+                        const timer = setTimeout(() => setCopied(false), 2000);
+                        return () => clearTimeout(timer);
+                      }}
+                      className={cn(
+                        "pointer-events-auto h-13 w-fit cursor-pointer gap-2 rounded-full bg-black/30 px-4 text-sm tracking-widest text-white uppercase opacity-0 backdrop-blur-md transition-all duration-300 hover:bg-black/60 hover:text-white lg:px-6 lg:py-6",
+                        !hideUi && "opacity-100",
+                      )}
+                    >
+                      <span className="relative flex size-5 flex-shrink-0 items-center justify-center overflow-hidden">
+                        <AnimatePresence mode="wait" initial={false}>
+                          {copied ? (
+                            <motion.span
+                              key="check"
+                              initial={{ opacity: 0, scale: 0.5 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              exit={{ opacity: 0, scale: 0.5 }}
+                              transition={{ duration: 0.15 }}
+                              className="absolute inset-0 flex items-center justify-center"
+                            >
+                              <Check className="size-5" />
+                            </motion.span>
+                          ) : (
+                            <motion.span
+                              key="copy"
+                              initial={{ opacity: 0, scale: 0.5 }}
+                              animate={{ opacity: 1, scale: 1 }}
+                              exit={{ opacity: 0, scale: 0.5 }}
+                              transition={{ duration: 0.15 }}
+                              className="absolute inset-0 flex items-center justify-center"
+                            >
+                              <Copy className="size-5" />
+                            </motion.span>
+                          )}
+                        </AnimatePresence>
+                      </span>
+                      {detaildPhoto.referenceId}
+                    </Button>
+                  )}
                 </div>
-
-                <div className="flex-1" />
 
                 {/* Bottom / Right Layout */}
                 <AnimatePresence>
@@ -226,7 +273,7 @@ export default function ClientContent({
                         initial={{ opacity: 0, x: 40 }}
                         animate={{ opacity: 1, x: 0 }}
                         exit={{ opacity: 0, x: 40 }}
-                        className="pointer-events-auto absolute top-4 right-4 flex w-fit flex-col items-start gap-4 lg:top-28 lg:right-12 lg:bottom-12 lg:w-[400px] lg:items-stretch lg:justify-start lg:gap-8"
+                        className="pointer-events-auto absolute top-4 right-4 flex h-[calc(100dvh-144px)] w-fit flex-col items-start gap-4 lg:top-28 lg:right-12 lg:bottom-12 lg:w-[400px] lg:items-stretch lg:justify-start lg:gap-8"
                       >
                         {/* Text Box */}
                         <div className="flex w-full flex-col rounded-4xl bg-black/40 p-6 text-white backdrop-blur-md lg:flex-1 lg:p-10">

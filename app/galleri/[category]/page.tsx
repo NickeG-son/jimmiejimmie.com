@@ -20,6 +20,7 @@ export default async function GalleryCategoryPage({
           title,
           "slug": slug.current,
           "mainImage": image,
+          referenceId,
           description,
           iso,
           aperture,
@@ -30,6 +31,7 @@ export default async function GalleryCategoryPage({
           title,
           "slug": slug.current,
           "mainImage": image,
+          referenceId,
           description,
           iso,
           aperture,
@@ -40,4 +42,3 @@ export default async function GalleryCategoryPage({
 
   return <ClientContent images={images} category={category} />;
 }
-

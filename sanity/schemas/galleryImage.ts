@@ -32,6 +32,11 @@ export default defineType({
       },
     }),
     defineField({
+      name: "referenceId",
+      title: "Reference ID",
+      type: "string",
+    }),
+    defineField({
       name: "image",
       title: "Image",
       type: "image",

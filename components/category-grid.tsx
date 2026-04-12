@@ -5,7 +5,6 @@ import { GalleryImage } from "@/lib/types";
 import {
   ArrowUp,
   LayoutGrid,
-  Link,
   Mail,
   MailIcon,
   Maximize,
@@ -13,6 +12,7 @@ import {
 } from "lucide-react";
 import { useEffect, useState } from "react";
 import { Button } from "./ui/button";
+import Link from "next/link";
 
 const variantItem = {
   hidden: { opacity: 0, y: 40 },
@@ -137,8 +137,9 @@ export default function CategoryGrid({
             />
             <Maximize className="absolute top-4 right-4 size-10 rounded-full bg-black/20 p-2 text-white backdrop-blur-md" />
             <Link
+              onClick={(e) => e.stopPropagation()}
               className="absolute right-4 bottom-4 flex size-10 items-center justify-center rounded-full bg-black/20 p-2 text-white backdrop-blur-md"
-              href={`/kontakt`}
+              href={`/kontakt?ref=${image.referenceId}`}
             >
               <MailIcon />
             </Link>

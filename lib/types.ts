@@ -10,13 +10,19 @@ export interface MenuItem {
   title: string;
   link?: string;
   isDropdown: boolean;
-  dropdownItems?: { _type: "page" | "category"; _id: string; title: string; slug: string }[];
+  dropdownItems?: {
+    _type: "page" | "category";
+    _id: string;
+    title: string;
+    slug: string;
+  }[];
 }
 
 export interface GalleryImage {
   _id: string;
   title: string;
   slug: string;
+  referenceId: string;
   mainImage: MainImage;
   category: Category;
   description?: string;

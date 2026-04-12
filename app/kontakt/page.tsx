@@ -1,3 +1,4 @@
+import { Suspense } from "react";
 import { client, urlFor } from "@/sanity/client";
 import { PortableText } from "@portabletext/react";
 import Image from "next/image";
@@ -59,7 +60,7 @@ export default async function KontaktPage() {
           <Image
             src={urlFor(page.mainImage).width(1600).height(700).url()}
             alt={page.title}
-            className="aspect-square w-full object-cover lg:aspect-video"
+            className="aspect-square w-full object-cover lg:aspect-[unset] lg:w-screen"
             width={1920}
             height={1080}
           />
@@ -102,9 +103,10 @@ export default async function KontaktPage() {
           </div>
         )}
 
-        {/* Contact Form */}
-
-        <ContactForm />
+        {/* Contact Form — Suspense needed because ContactForm uses useSearchParams */}
+        <Suspense fallback={null}>
+          <ContactForm />
+        </Suspense>
       </div>
     </article>
   );

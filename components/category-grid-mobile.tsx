@@ -136,7 +136,7 @@ export default function CategoryGrid({
             <Maximize className="absolute top-2 right-2 size-10 rounded-full bg-black/20 p-2 text-white backdrop-blur-md" />
             <Link
               className="absolute right-2 bottom-2 flex size-10 items-center justify-center rounded-full bg-black/20 p-2 text-white backdrop-blur-md"
-              href={`/kontakt`}
+              href={`/kontakt?ref=${image.referenceId}`}
             >
               <MailIcon className="size-5" />
             </Link>
