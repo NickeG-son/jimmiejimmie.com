@@ -6,6 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { HeroSlide } from "@/lib/types";
 import { ArrowRight, ChevronUp, MoveRight } from "lucide-react";
+import { useSessionIndicator } from "@/hooks/use-session-indicator";
 
 export default function HeroSection({ slides }: { slides: HeroSlide[] }) {
   const containerRef = useRef<HTMLDivElement>(null);
@@ -90,6 +91,8 @@ export default function HeroSection({ slides }: { slides: HeroSlide[] }) {
               alt={s.category.title}
               fill
               priority={i === 0}
+              sizes="100vw"
+              quality={90}
               className="object-cover"
             />
             <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/80" />
@@ -197,28 +200,20 @@ interface MobileScrollIndicatorProps {
 }
 
 function MobileScrollIndicator({ activeIndex }: MobileScrollIndicatorProps) {
+  const sessionAllows = useSessionIndicator("hint-hero-scroll");
   const [isVisible, setIsVisible] = useState(false);
-  // Nytt tillstånd för att hålla koll på om den någonsin har visats
-  const [hasBeenShown, setHasBeenShown] = useState(false);
 
   useEffect(() => {
-    // Visa bara indikatorn om:
-    // 1. Vi är på första sliden
-    // 2. Den INTE har visats tidigare under denna session
-    if (activeIndex === 0 && !hasBeenShown) {
+    if (!sessionAllows) return;
+
+    if (activeIndex === 0) {
       setIsVisible(true);
-      setHasBeenShown(true); // Markera omedelbart som visad
-
-      const timer = setTimeout(() => {
-        setIsVisible(false);
-      }, 4000);
-
+      const timer = setTimeout(() => setIsVisible(false), 4000);
       return () => clearTimeout(timer);
-    } else if (activeIndex !== 0) {
-      // Om användaren scrollar ner innan timern gått ut, dölj den
+    } else {
       setIsVisible(false);
     }
-  }, [activeIndex, hasBeenShown]); // Lägg till hasBeenShown i dependency-arrayen
+  }, [activeIndex, sessionAllows]);
 
   return (
     <AnimatePresence>

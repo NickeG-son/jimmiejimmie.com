@@ -20,6 +20,7 @@ import Link from "next/link";
 import CategoryGrid from "@/components/category-grid";
 import { useIsMobile } from "@/hooks/use-mobile";
 import CategoryGridMobile from "@/components/category-grid-mobile";
+import { useSessionIndicator } from "@/hooks/use-session-indicator";
 
 export default function ClientContent({
   images,
@@ -37,19 +38,20 @@ export default function ClientContent({
   const [hideUi, setHideUi] = useState(false);
   const [showRotateIndicator, setShowRotateIndicator] = useState(false);
   const isMobile = useIsMobile();
+  const sessionAllows = useSessionIndicator("hint-rotate-phone");
 
   useEffect(() => {
-    if (detaildId) {
-      setHasOpenedPhoto(true);
-      if (isMobile && isPortrait) {
-        setShowRotateIndicator(true);
-        const timer = setTimeout(() => setShowRotateIndicator(false), 4000);
-        return () => clearTimeout(timer);
-      }
-    } else {
+    if (!detaildId) {
       setShowRotateIndicator(false);
+      return;
     }
-  }, [detaildId, isMobile, isPortrait]);
+    setHasOpenedPhoto(true);
+    if (isMobile && isPortrait && sessionAllows) {
+      setShowRotateIndicator(true);
+      const timer = setTimeout(() => setShowRotateIndicator(false), 4000);
+      return () => clearTimeout(timer);
+    }
+  }, [detaildId, isMobile, isPortrait, sessionAllows]);
 
   useEffect(() => {
     if (isMobile) {
@@ -83,7 +85,7 @@ export default function ClientContent({
         )}
       >
         <h1 className="mb-4 text-center text-2xl font-bold tracking-widest uppercase lg:mb-0 lg:text-5xl">
-          {category}
+          {category.replace(/-/g, " ")}
         </h1>
 
         <Link

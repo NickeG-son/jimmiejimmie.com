@@ -23,6 +23,7 @@ interface HeaderProps {
 
 export default function Header({ menuItems, categories }: HeaderProps) {
   const isStartPage = usePathname() === "/";
+  const isGalleryPage = usePathname().startsWith("/galleri/");
   const { scrollY } = useScroll();
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
@@ -50,7 +51,10 @@ export default function Header({ menuItems, categories }: HeaderProps) {
           width: isStartPage ? "4rem" : "52px",
           height: isStartPage ? "4rem" : "52px",
         }}
-        className="fixed top-4 z-50 flex flex-shrink-0 items-center justify-center overflow-hidden rounded-full bg-black/30 p-3 backdrop-blur-md lg:hidden"
+        className={cn(
+          "fixed top-4 z-50 flex flex-shrink-0 items-center justify-center overflow-hidden rounded-full p-3 lg:hidden",
+          isGalleryPage ? "bg-muted" : "bg-black/30 backdrop-blur-md",
+        )}
       >
         <Link
           href="/"
@@ -65,6 +69,7 @@ export default function Header({ menuItems, categories }: HeaderProps) {
             height={100}
             alt="Logo"
             className="object-cover"
+            priority
           />
         </Link>
       </motion.div>

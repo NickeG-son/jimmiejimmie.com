@@ -56,7 +56,13 @@ export default function AnimatedMenu({
             opacity: 1,
             y: 0,
             scale: 1,
-            transition: { duration: 0.2 },
+            transition: {
+              duration: 0.2,
+              type: "spring",
+              stiffness: 500,
+              damping: 30,
+              mass: 1,
+            },
           }}
           exit={{ opacity: 0, y: -80, scale: 0.0 }}
           onMouseEnter={() => setOpen(activeMenu._id)}

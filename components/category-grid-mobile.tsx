@@ -2,8 +2,16 @@ import { AnimatePresence, motion } from "motion/react";
 import Image from "next/image";
 import { urlFor } from "@/sanity/client";
 import { GalleryImage } from "@/lib/types";
-import { LayoutGrid, Maximize, Square } from "lucide-react";
-import { useState } from "react";
+import {
+  ArrowUp,
+  LayoutGrid,
+  Mail,
+  MailIcon,
+  Maximize,
+  Square,
+} from "lucide-react";
+import { useEffect, useState } from "react";
+import Link from "next/link";
 
 const variantItem = {
   hidden: { opacity: 0, y: 40 },
@@ -23,6 +31,19 @@ export default function CategoryGrid({
   skipAnimation?: boolean;
 }) {
   const [layout, setLayout] = useState("list");
+  const [showScrollUp, setShowScrollUp] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      if (window.scrollY > 0) {
+        setShowScrollUp(true);
+      } else {
+        setShowScrollUp(false);
+      }
+    };
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   return (
     <div className="flex flex-col gap-4 pt-4">
@@ -58,6 +79,31 @@ export default function CategoryGrid({
         </AnimatePresence>
       </motion.button>
 
+      <AnimatePresence>
+        {showScrollUp && (
+          <motion.button
+            initial={{ scale: 0 }}
+            animate={{ scale: 1 }}
+            exit={{ scale: 0 }}
+            className="bg-muted fixed bottom-[95px] left-6 z-10 ml-auto flex size-13 cursor-pointer items-center justify-center rounded-full"
+            onClick={() => {
+              if (showScrollUp) {
+                window.scrollTo({ top: 0, behavior: "smooth" });
+              }
+            }}
+          >
+            <motion.span
+              key="grid"
+              initial={{ rotate: -90, opacity: 0 }}
+              animate={{ rotate: 0, opacity: 1 }}
+              exit={{ rotate: 90, opacity: 0 }}
+            >
+              <ArrowUp className="size-6" />
+            </motion.span>
+          </motion.button>
+        )}
+      </AnimatePresence>
+
       <motion.div
         variants={{
           visible: {
@@ -70,7 +116,7 @@ export default function CategoryGrid({
         }}
         initial={skipAnimation ? "visible" : "hidden"}
         animate="visible"
-        className={`grid gap-6 ${layout === "list" ? "grid-cols-1" : "grid-cols-2"}`}
+        className={`grid ${layout === "list" ? "grid-cols-1 gap-6" : "grid-cols-2 gap-4"}`}
       >
         {images.map((image: GalleryImage) => (
           <motion.div
@@ -88,6 +134,12 @@ export default function CategoryGrid({
               className="object-cover"
             />
             <Maximize className="absolute top-2 right-2 size-10 rounded-full bg-black/20 p-2 text-white backdrop-blur-md" />
+            <Link
+              className="absolute right-2 bottom-2 flex size-10 items-center justify-center rounded-full bg-black/20 p-2 text-white backdrop-blur-md"
+              href={`/kontakt`}
+            >
+              <MailIcon className="size-5" />
+            </Link>
           </motion.div>
         ))}
       </motion.div>

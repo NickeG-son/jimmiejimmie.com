@@ -74,14 +74,15 @@ export default function AnimatedMenuMobile({
           animate={{
             scale: 1,
             y: 0,
-            bottom: 110,
+            bottom: 100,
             width: "calc(100% - 48px)",
             right: 24,
             transition: {
               duration: 0.2,
               type: "spring",
-              stiffness: 110,
-              damping: 14,
+              stiffness: 500,
+              damping: 30,
+              mass: 1,
             },
           }}
           exit={{ scale: 0, y: 30, bottom: -30, width: 0, right: 14 }}
@@ -109,7 +110,7 @@ export default function AnimatedMenuMobile({
               <motion.li
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
-                transition={{ duration: 0.3, delay: 0.5 }}
+                transition={{ duration: 0.3, delay: 0.35 }}
                 key={item._id}
                 className="overflow-hidden"
               >
