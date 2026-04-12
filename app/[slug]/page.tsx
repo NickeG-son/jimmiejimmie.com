@@ -69,7 +69,7 @@ export default async function GenericPage({
           <Image
             src={urlFor(page.mainImage).width(1600).height(700).url()}
             alt={page.title}
-            className="aspect-square w-full object-cover lg:aspect-video"
+            className="aspect-square w-full object-cover lg:aspect-[unset] lg:w-screen"
             width={1920}
             height={1080}
           />
